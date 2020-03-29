@@ -1,3 +1,4 @@
+
 PImage bg;
 PImage soil;
 PImage life;
@@ -5,7 +6,7 @@ PImage groundHog;
 PImage robot;
 PImage soldier;
 
-int soldierSpeed,robotSpeed,n,floor1 ,floor2;
+int soldierSpeed,robotX,robotRandomX,floorS ,floorR,laserSpeed,laserLength,laserMaxLength;
 
 void setup() {
 	size(640, 480, P2D);
@@ -16,11 +17,15 @@ void setup() {
   robot = loadImage("img/robot.png");
   soldier = loadImage("img/soldier.png");
   
-  floor1 = (floor(random(3))+1);
-  floor2 = (floor(random(3))+1);
-  n = (floor(random(3)));
+  floorS = (floor(random(4))+1)*80+80; //soldier's Y position
+  floorR = (floor(random(4))+1)*80+80; //robot's Y position
+  //robot's X position
+  robotRandomX = (floor(random(5)))*80 ; 
+  robotX = 80*2;
   soldierSpeed = 0;
-  robotSpeed = 160;
+  laserSpeed =0;
+  laserMaxLength = 40;
+  laserLength = 0;
 }
 
 void draw() {
@@ -31,7 +36,7 @@ void draw() {
   //soil
   image ( soil ,0 ,160); 
   
-  //grss
+  //grass
   colorMode(RGB);
   fill(124,204,25);
   noStroke();
@@ -51,14 +56,35 @@ void draw() {
   fill(253,184,19);
   ellipse(640-50,50,120,120);
   
-  soldierSpeed += 7; // x=x+7 
+  soldierSpeed += 6; // x=x+6
   soldierSpeed %= 750;
   
   //Soldier's position
-  image(soldier,soldierSpeed,floor1*80+80);
+  image(soldier,soldierSpeed,floorS);
  
+  //laser
+  strokeWeight(10);
+  stroke(255,0,0);
+  line(robotX+robotRandomX+25-laserSpeed,floorR+37,robotX+robotRandomX+25-laserSpeed-laserLength,floorR+37);
+  laserSpeed += 2;
+  
+  //laser maximum lenth
+  if(laserLength==40){
+    laserLength=40;
+  }else{
+    laserLength += 2;
+  }
+  
+  //laser range
+  if(robotX+robotRandomX+25-laserSpeed-laserLength ==robotX+robotRandomX-(160+25)){
+    laserLength -=2;
+  }
+  
+  if(robotX+robotRandomX+25-laserSpeed ==robotX+robotRandomX-(160+25)){
+    laserSpeed = 0;
+    laserLength = 0;
+  }
+  
   //robot's position
-  robotSpeed += 7;
-  image(robot,robotSpeed,floor2*80+80);
-
+  image(robot,robotX+robotRandomX,floorR);
 }
