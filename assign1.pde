@@ -25,7 +25,7 @@ void setup() {
   floorS = (floor(random(4))+1)*80+80; //soldier's Y position
   floorR = (floor(random(4))+1)*80+80; //robot's Y position
   //robot's X position
-  robotRandomX = (floor(random(5)))*80 ; 
+  robotRandomX = (floor(random(6)))*80 ; 
   robotX = 80*2;
   soldierSpeed = 0;
 }
