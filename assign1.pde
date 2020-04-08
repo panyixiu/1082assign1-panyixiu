@@ -2,18 +2,23 @@
 PImage bg;
 PImage soil;
 PImage life;
-PImage groundHog;
+PImage groundhog;
 PImage robot;
 PImage soldier;
 
-int soldierSpeed,robotX,robotRandomX,floorS ,floorR,laserSpeed,laserLength,laserMaxLength;
+int soldierSpeed,robotX,robotRandomX,floorS ,floorR;
+int groundhogWidth = 40;
+int soldierWidth = 40;
+int laserX1, laserX2;
+int laserSpeed1 = 0;
+int laserSpeed2 = 0;
 
 void setup() {
 	size(640, 480, P2D);
 	bg = loadImage("img/bg.jpg");
   soil = loadImage("img/soil.png");
   life = loadImage("img/life.png");
-  groundHog = loadImage("img/groundhog.png");
+  groundhog = loadImage("img/groundhog.png");
   robot = loadImage("img/robot.png");
   soldier = loadImage("img/soldier.png");
   
@@ -23,9 +28,6 @@ void setup() {
   robotRandomX = (floor(random(5)))*80 ; 
   robotX = 80*2;
   soldierSpeed = 0;
-  laserSpeed =0;
-  laserMaxLength = 40;
-  laserLength = 0;
 }
 
 void draw() {
@@ -48,7 +50,7 @@ void draw() {
   image ( life ,150 ,10);
    
   //groundhog
-  image ( groundHog , 640/2 ,80);
+  image ( groundhog , 640/2 - groundhogWidth ,80);
   
   //sun
   fill(255,255,0);
@@ -57,32 +59,26 @@ void draw() {
   ellipse(640-50,50,120,120);
   
   soldierSpeed += 6; // x=x+6
-  soldierSpeed %= 750;
+  soldierSpeed %= 900;
   
   //Soldier's position
-  image(soldier,soldierSpeed,floorS);
+  image(soldier,soldierSpeed - soldierWidth ,floorS);
  
   //laser
   strokeWeight(10);
   stroke(255,0,0);
-  line(robotX+robotRandomX+25-laserSpeed,floorR+37,robotX+robotRandomX+25-laserSpeed-laserLength,floorR+37);
-  laserSpeed += 2;
+  laserX1 = robotX+robotRandomX+25+laserSpeed1;
+  laserX2 = robotX+robotRandomX+25+laserSpeed2;
+  line(laserX1,floorR+37,laserX2,floorR+37);
   
-  //laser maximum lenth
-  if(laserLength==40){
-    laserLength=40;
+  if(laserX1 > robotX+robotRandomX - 2*80){
+    laserSpeed1 -= 2;
+    if(laserX1 < robotX+robotRandomX +25 -30 ){
+      laserSpeed2 -= 2;
+    }
   }else{
-    laserLength += 2;
-  }
-  
-  //laser range
-  if(robotX+robotRandomX+25-laserSpeed-laserLength ==robotX+robotRandomX-(160+25)){
-    laserLength -=2;
-  }
-  
-  if(robotX+robotRandomX+25-laserSpeed ==robotX+robotRandomX-(160+25)){
-    laserSpeed = 0;
-    laserLength = 0;
+    laserSpeed1 = 0;
+    laserSpeed2 = 0;
   }
   
   //robot's position
